@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="My Little Fairy 🧚🏻‍♀️💗 — A magical, dreamy, retro-pink interactive sanctuary made with love.">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>My Little Fairy 🧚🏻‍♀️💗</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & DESIGN SYSTEM (Retro Fairy Palette)
+       ========================================================================== */
+    :root {
+      --bg-cream: #fff8fb;
+      --bg-pastel-pink: #ffeef4;
+      --bg-soft-rose: #ffd8e6;
+      --primary-pink: #ff85a2;
+      --deep-rose: #e75480;
+      --vibrant-pink: #ff4370;
+      --lavender: #f1e4ff;
+      --soft-peach: #fff0e5;
+      --fairy-gold: #ffd269;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      
+      /* Retro Window & Outlines */
+      --retro-plum: #421838;
+      --retro-plum-light: #642955;
+      --retro-plum-trans: rgba(66, 24, 56, 0.15);
+      --retro-border: 2px solid var(--retro-plum);
+      --retro-shadow: 4px 4px 0px var(--retro-plum);
+      --retro-shadow-sm: 2px 2px 0px var(--retro-plum);
+      --retro-shadow-lg: 6px 6px 0px var(--retro-plum);
+      --retro-inset: inset 2px 2px 0px #ffffff, inset -2px -2px 0px rgba(66, 24, 56, 0.2);
+      
+      /* Typography */
+      --font-body: 'Quicksand', sans-serif;
+      --font-heading: 'Playfair Display', serif;
+      --font-script: 'Dancing Script', cursive;
+
+      --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+
+    /* Base Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      font-family: var(--font-body);
+      color: var(--retro-plum);
+      background-color: var(--bg-pastel-pink);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body {
+      background: radial-gradient(circle at 10% 20%, #ffe9f2 0%, #fff2f8 35%, #f6e8ff 70%, #ffeef2 100%);
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    /* Particle Canvas for Fairy Dust */
+    #fairy-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* App Container */
+    #app-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 900px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px 130px 16px;
+    }
+
+    @media (max-width: 600px) {
+      #app-container {
+        padding: 16px 12px 140px 12px;
+      }
+    }
+
+    /* ==========================================================================
+       2. RETRO WINDOW COMPONENTS
+       ========================================================================== */
+    .retro-window {
+      background: var(--card-bg);
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      width: 100%;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95) translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .window-titlebar {
+      background: linear-gradient(90deg, #ff9ebb 0%, #ff85a2 50%, #ffa8c2 100%);
+      border-bottom: var(--retro-border);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .window-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.5px;
+      color: #fff;
+      text-shadow: 1px 1px 0px var(--retro-plum);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .window-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .win-btn {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--retro-plum);
+      border-radius: 4px;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--retro-plum);
+      cursor: pointer;
+      box-shadow: 1px 1px 0px var(--retro-plum);
+      transition: transform 0.15s ease;
+    }
+
+    .win-btn:hover {
+      transform: translateY(-1px);
+      background: #fff3f7;
+    }
+
+    .win-btn.btn-close:hover {
+      background: #ff5470;
+      color: #fff;
+    }
+
+    .window-content {
+      padding: 28px 24px;
+    }
+
+    @media (max-width: 600px) {
+      .window-content {
+        padding: 20px 16px;
+      }
+    }
+
+    /* ==========================================================================
+       3. SCREENS CONTAINER & SWITCHING
+       ========================================================================== */
+    .screen {
+      display: none;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .screen.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Screen Headings & Text */
+    .fairy-heading {
+      font-family: var(--font-heading);
+      font-size: 2.3rem;
+      color: var(--retro-plum);
+      text-align: center;
+      margin-bottom: 12px;
+      line-height: 1.25;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
+    }
+
+    .fairy-heading span.sparkle {
+      display: inline-block;
+      animation: floatSparkle 2.5s infinite ease-in-out;
+    }
+
+    @keyframes floatSparkle {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(8deg); }
+    }
+
+    .fairy-subtitle {
+      font-size: 1.05rem;
+      color: #643152;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .fairy-heading {
+        font-size: 1.75rem;
+      }
+      .fairy-subtitle {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* ==========================================================================
+       4. RETRO BUTTONS & INTERACTIVE ELEMENTS
+       ========================================================================== */
+    .btn-fairy {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 12px 26px;
+      border-radius: var(--radius-full);
+      border: var(--retro-border);
+      background: linear-gradient(135deg, #ff85a2 0%, #ff527b 100%);
+      color: #fff;
+      box-shadow: var(--retro-shadow);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+      user-select: none;
+    }
+
+    .btn-fairy:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--retro-shadow-lg);
+      background: linear-gradient(135deg, #ff94af 0%, #ff6289 100%);
+    }
+
+    .btn-fairy:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px var(--retro-plum);
+    }
+
+    .btn-fairy-secondary {
+      background: #fff;
+      color: var(--retro-plum);
+    }
+
+    .btn-fairy-secondary:hover {
+      background: #fff0f5;
+    }
+
+    .btn-fairy-sm {
+      padding: 8px 16px;
+      font-size: 0.88rem;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    /* ==========================================================================
+       5. SCREEN 1: MAGICAL WELCOME
+       ========================================================================== */
+    .welcome-card-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .fairy-avatar-halo {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fairy-avatar-halo::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 182, 193, 0.7) 0%, rgba(255, 230, 240, 0.2) 70%, transparent 100%);
+      animation: pulseGlow 3s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(1.15); opacity: 1; }
+    }
+
+    .fairy-illustration-box {
+      width: 110px;
+      height: 110px;
+      background: linear-gradient(135deg, #ffe0ed 0%, #ffd0e3 100%);
+      border: var(--retro-border);
+      border-radius: 50%;
+      box-shadow: var(--retro-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .fairy-wings-svg {
+      width: 80px;
+      height: 80px;
+      animation: wingFlutter 3s infinite ease-in-out;
+    }
+
+    @keyframes wingFlutter {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.08) rotate(3deg); }
+    }
+
+    .welcome-badge {
+      display: inline-block;
+      background: #ffe3ed;
+      border: 1.5px solid var(--retro-plum);
+      border-radius: var(--radius-full);
+      padding: 5px 16px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      margin-bottom: 16px;
+      box-shadow: 2px 2px 0px var(--retro-plum);
+    }
+
+    .welcome-desc {
+      font-size: 1.05rem;
+      color: #643152;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.6;
+      max-width: 580px;
+    }
+
+    /* ==========================================================================
+       6. SCREEN 2: MAGICAL REVEAL
+       ========================================================================== */
+    .reveal-box {
+      background: linear-gradient(135deg, #fff7fa 0%, #fff1f6 100%);
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      padding: 30px 24px;
+      box-shadow: inset 0 0 20px rgba(255, 182, 193, 0.3);
+      text-align: center;
+      position: relative;
+    }
+
+    .reveal-quote {
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
+      line-height: 1.6;
+      color: var(--retro-plum);
+      margin: 18px 0 24px 0;
+    }
+
+    .reveal-wand {
+      font-size: 2.5rem;
+      display: inline-block;
+      animation: wandWiggle 2s infinite ease-in-out;
+    }
+
+    @keyframes wandWiggle {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-12deg) scale(1.1); }
+      75% { transform: rotate(8deg) scale(1.05); }
+    }
+
+    /* ==========================================================================
+       7. SCREEN 3: MAIN DASHBOARD
+       ========================================================================== */
+    .dashboard-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: #fff1f7;
+      border: var(--retro-border);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      margin-bottom: 22px;
+      box-shadow: var(--retro-shadow-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      border: 1px solid var(--retro-plum);
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .dash-card {
+      background: #fff;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dash-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--retro-shadow-lg);
+      background: #fff5f9;
+    }
+
+    .dash-card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+
+    .dash-card:hover .dash-card-icon {
+      transform: scale(1.15) rotate(5deg);
+    }
+
+    .dash-card-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--retro-plum);
+      margin-bottom: 6px;
+    }
+
+    .dash-card-desc {
+      font-size: 0.82rem;
+      color: #7a3e66;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .dash-card-tag {
+      font-size: 0.74rem;
+      font-weight: 700;
+      background: #ffe3ed;
+      color: var(--deep-rose);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--retro-plum);
+      margin-top: auto;
+    }
+
+    /* ==========================================================================
+       8. SCREEN 4: MY STORY (RETRO DIARY)
+       ========================================================================== */
+    .story-book-frame {
+      background: #fffdfa;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 24px;
+      position: relative;
+    }
+
+    .story-book-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed #e8b6ca;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .story-date-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      background: #fff0f5;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--retro-plum);
+    }
+
+    .story-tab-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+    }
+
+    .story-tab-btn {
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1.5px solid var(--retro-plum);
+      border-radius: var(--radius-full);
+      background: #fff;
+      color: var(--retro-plum);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .story-tab-btn.active, .story-tab-btn:hover {
+      background: var(--primary-pink);
+      color: #fff;
+      box-shadow: 2px 2px 0px var(--retro-plum);
+    }
+
+    .story-content-box {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #421838;
+      min-height: 180px;
+      padding: 12px 10px;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .story-content-box p {
+      margin-bottom: 1.2rem;
+      line-height: 1.8;
+    }
+
+    .story-final-message {
+      margin-top: 18px;
+      padding: 14px 18px;
+      background: #fff0f6;
+      border: 1.5px dashed var(--retro-plum);
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      line-height: 1.7;
+    }
+
+    .story-final-message strong {
+      color: var(--deep-rose);
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.05rem;
+    }
+
+    .story-footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      border-top: 2px dashed #e8b6ca;
+      padding-top: 16px;
+    }
+
+    /* ==========================================================================
+       9. SCREEN 5: A LITTLE LETTER (INTERACTIVE ENVELOPE)
+       ========================================================================== */
+    .envelope-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 0;
+      perspective: 1000px;
+    }
+
+    .retro-envelope-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      height: 280px;
+      background: #ffb1c4;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .retro-envelope-wrapper:hover {
+      transform: translateY(-3px);
+    }
+
+    .envelope-top-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 230px solid transparent;
+      border-right: 230px solid transparent;
+      border-top: 140px solid #ff8ea9;
+      transform-origin: top;
+      transition: transform 0.5s ease;
+      z-index: 5;
+    }
+
+    @media (max-width: 500px) {
+      .retro-envelope-wrapper {
+        height: 240px;
+      }
+      .envelope-top-flap {
+        border-left: 170px solid transparent;
+        border-right: 170px solid transparent;
+        border-top: 110px solid #ff8ea9;
+      }
+    }
+
+    .envelope-seal {
+      position: absolute;
+      top: 115px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 58px;
+      height: 58px;
+      background: #ff3366;
+      border: 2px solid var(--retro-plum);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 2px 2px 0px var(--retro-plum);
+      z-index: 6;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .envelope-seal:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .envelope-instruction {
+      margin-top: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--deep-rose);
+      text-align: center;
+    }
+
+    /* Opened Letter View */
+    .letter-paper-view {
+      display: none;
+      background: #fffcf8;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 30px;
+      margin-top: 10px;
+      position: relative;
+      animation: unfoldPaper 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    @keyframes unfoldPaper {
+      0% {
+        opacity: 0;
+        transform: scaleY(0.4) translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: scaleY(1) translateY(0);
+      }
+    }
+
+    .letter-header-stamp {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      width: 54px;
+      height: 64px;
+      border: 2px dashed #ff85a2;
+      border-radius: 4px;
+      background: #fff2f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      transform: rotate(4deg);
+      box-shadow: 1px 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .letter-salutation {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: var(--retro-plum);
+      margin-bottom: 16px;
+    }
+
+    .letter-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #421838;
+      margin-bottom: 20px;
+    }
+
+    .letter-body p {
+      margin-bottom: 14px;
+    }
+
+    .letter-closing-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    .letter-dua {
+      background: #fff3f8;
+      border-left: 3px solid var(--deep-rose);
+      padding: 12px 16px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: #421838;
+      margin-bottom: 14px;
+    }
+
+    .letter-signature {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    /* ==========================================================================
+       10. SCREEN 6: SWEET PROMISES
+       ========================================================================== */
+    .promises-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 650px) {
+      .promises-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .promise-card {
+      background: #fff;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 20px 16px 16px 16px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 155px;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .promise-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--retro-shadow-lg);
+      background: #fff8fb;
+    }
+
+    .promise-pin {
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 18px;
+      height: 18px;
+      background: #ff5470;
+      border: 1.5px solid var(--retro-plum);
+      border-radius: 50%;
+      box-shadow: 1px 1px 0px var(--retro-plum);
+    }
+
+    .promise-number {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .promise-text {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--retro-plum);
+      margin-bottom: 12px;
+    }
+
+    .promise-seal {
+      align-self: flex-end;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--retro-plum);
+      background: #ffe3ed;
+      color: var(--deep-rose);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .promise-card.sealed {
+      background: #fff0f6;
+      border-color: #ff3366;
+    }
+
+    .promise-card.sealed .promise-seal {
+      background: #ff3366;
+      color: #fff;
+    }
+
+    /* ==========================================================================
+       11. SCREEN 7: MAGICAL WISHES
+       ========================================================================== */
+    .wish-orb-container {
+      background: radial-gradient(circle, #fff1f8 0%, #fde7f1 60%, #f6d8ea 100%);
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 34px 20px;
+      text-align: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .wish-star-icon {
+      font-size: 3.5rem;
+      display: inline-block;
+      animation: floatSparkle 3s infinite ease-in-out;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 10px rgba(255, 210, 105, 0.7));
+    }
+
+    .wish-display-card {
+      background: #fff;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow-sm);
+      padding: 20px 22px;
+      margin: 18px auto;
+      max-width: 580px;
+      min-height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.6;
+      color: var(--retro-plum);
+      transition: all 0.3s ease;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .wishes-counter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffe3ed;
+      border: 1px solid var(--retro-plum);
+      border-radius: var(--radius-full);
+      padding: 4px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+    }
+
+    /* ==========================================================================
+       12. SCREEN 8: FAIRY QUIZ
+       ========================================================================== */
+    .quiz-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .quiz-group {
+      background: #fff;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow-sm);
+      padding: 16px;
+      text-align: left;
+    }
+
+    .quiz-label {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--retro-plum);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quiz-input, .quiz-textarea {
+      width: 100%;
+      border: 1.5px solid var(--retro-plum);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--retro-plum);
+      background: #fffdfd;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .quiz-input:focus, .quiz-textarea:focus {
+      border-color: var(--deep-rose);
+      box-shadow: 0 0 0 3px rgba(255, 133, 162, 0.25);
+    }
+
+    .quiz-textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    /* Quiz Result Box */
+    .quiz-result-card {
+      display: none;
+      background: linear-gradient(135deg, #fff7fa 0%, #fff0f6 100%);
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 24px;
+      margin-top: 20px;
+      text-align: center;
+      animation: popIn 0.4s ease;
+    }
+
+    .result-badge {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--deep-rose);
+      background: #fff;
+      border: var(--retro-border);
+      border-radius: var(--radius-full);
+      padding: 6px 20px;
+      box-shadow: var(--retro-shadow-sm);
+      margin-bottom: 12px;
+    }
+
+    .result-text {
+      font-size: 1.02rem;
+      line-height: 1.6;
+      color: #421838;
+      margin-bottom: 18px;
+    }
+
+    /* ==========================================================================
+       13. SCREEN 9: SECRET WORLD
+       ========================================================================== */
+    .secret-box-container {
+      background: radial-gradient(circle, #fff3f8 0%, #fae2ef 70%, #f6d1e7 100%);
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 36px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .gift-box-icon {
+      font-size: 4rem;
+      display: inline-block;
+      margin-bottom: 16px;
+      cursor: pointer;
+      animation: giftBounce 2.5s infinite ease-in-out;
+      transition: transform 0.3s ease;
+    }
+
+    @keyframes giftBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.08); }
+    }
+
+    .secret-reveal-content {
+      display: none;
+      background: #fff;
+      border: var(--retro-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--retro-shadow);
+      padding: 26px 22px;
+      margin-top: 20px;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .secret-quote {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      line-height: 1.7;
+      color: var(--retro-plum);
+      margin-bottom: 14px;
+    }
+
+    /* ==========================================================================
+       14. PERSISTENT FLOATING MUSIC CONTROLLER (O MAAHI)
+       ========================================================================== */
+    #music-player-bar {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      border: var(--retro-border);
+      border-radius: var(--radius-full);
+      box-shadow: var(--retro-shadow);
+      padding: 6px 14px 6px 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+      max-width: calc(100vw - 32px);
+    }
+
+    @media (max-width: 600px) {
+      #music-player-bar {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 5px 8px;
+        gap: 6px;
+        justify-content: space-between;
+      }
+      .music-meta {
+        max-width: 85px;
+        overflow: hidden;
+      }
+      .music-title {
+        font-size: 0.74rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .music-subtitle {
+        font-size: 0.66rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .music-btn {
+        padding: 4px 8px;
+        font-size: 0.72rem;
+      }
+    }
+
+    .vinyl-disc {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      background: radial-gradient(circle, #ff5470 20%, #421838 22%, #220b1d 60%, #421838 70%);
+      border: 1.5px solid var(--retro-plum);
+      border-radius: 50%;
+      box-shadow: 1px 1px 0px var(--retro-plum);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #fff;
+      animation: spinVinyl 5s linear infinite;
+      animation-play-state: paused;
+    }
+
+    .vinyl-disc.playing {
+      animation-play-state: running;
+    }
+
+    @keyframes spinVinyl {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .music-meta {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      line-height: 1.2;
+    }
+
+    .music-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--retro-plum);
+      white-space: nowrap;
+    }
+
+    .music-subtitle {
+      font-size: 0.72rem;
+      color: #8c4e77;
+      white-space: nowrap;
+    }
+
+    .music-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .music-btn {
+      padding: 6px 12px;
+      border: 1.5px solid var(--retro-plum);
+      border-radius: var(--radius-full);
+      background: #fff0f5;
+      color: var(--retro-plum);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 1px 1px 0px var(--retro-plum);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .music-btn:hover {
+      background: var(--primary-pink);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .music-wave {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 14px;
+    }
+
+    .music-bar {
+      width: 3px;
+      background: #ff5470;
+      border-radius: 2px;
+      height: 4px;
+      transition: height 0.2s ease;
+    }
+
+    .vinyl-disc.playing ~ .music-wave .music-bar:nth-child(1) { animation: wave 0.8s ease-in-out infinite alternate; }
+    .vinyl-disc.playing ~ .music-wave .music-bar:nth-child(2) { animation: wave 1.1s ease-in-out 0.2s infinite alternate; }
+    .vinyl-disc.playing ~ .music-wave .music-bar:nth-child(3) { animation: wave 0.9s ease-in-out 0.4s infinite alternate; }
+
+    @keyframes wave {
+      0% { height: 4px; }
+      100% { height: 14px; }
+    }
+
+    /* YouTube Player Container - Positioned stably in rendering layer to prevent mobile background throttling */
+    #yt-hidden-player-box {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      width: 200px;
+      height: 200px;
+      opacity: 0.01;
+      pointer-events: none;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    #yt-hidden-player-box iframe {
+      width: 100% !important;
+      height: 100% !important;
+      border: 0 !important;
+    }
+
+    /* Attractive Floating Tap to Play Prompt for Mobile & Desktop */
+    #mobile-play-prompt {
+      position: fixed;
+      bottom: 84px;
+      right: 20px;
+      z-index: 1200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: pulsePrompt 2s infinite ease-in-out;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .btn-tap-to-play {
+      background: linear-gradient(135deg, #ff85a2 0%, #ff4370 100%);
+      color: #ffffff;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 12px 22px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--retro-plum);
+      box-shadow: 4px 4px 0px var(--retro-plum);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-tap-to-play:hover, .btn-tap-to-play:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px var(--retro-plum);
+    }
+
+    .btn-tap-to-play .music-icon-spin {
+      display: inline-block;
+      animation: noteBounce 1.2s infinite alternate ease-in-out;
+      font-size: 1.15rem;
+    }
+
+    @keyframes pulsePrompt {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes noteBounce {
+      0% { transform: rotate(-10deg) scale(0.95); }
+      100% { transform: rotate(10deg) scale(1.15); }
+    }
+
+    @media (max-width: 600px) {
+      #mobile-play-prompt {
+        bottom: 80px;
+        right: 50%;
+        transform: translateX(50%);
+        animation: pulsePromptMobile 2s infinite ease-in-out;
+      }
+      @keyframes pulsePromptMobile {
+        0%, 100% { transform: translateX(50%) translateY(0); }
+        50% { transform: translateX(50%) translateY(-5px); }
+      }
+    }
+
+    /* Toast Notification for In-Page Alerts */
+    #fairy-toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      z-index: 2000;
+      background: #fff;
+      border: var(--retro-border);
+      border-radius: var(--radius-full);
+      padding: 10px 22px;
+      box-shadow: var(--retro-shadow);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--deep-rose);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    #fairy-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Utility decorations */
+    .sparkle-icon {
+      color: #ffb703;
+      filter: drop-shadow(0 0 2px rgba(255, 183, 3, 0.6));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Fairy Dust Canvas -->
+  <canvas id="fairy-canvas"></canvas>
+
+  <!-- In-page Toast Notification -->
+  <div id="fairy-toast">✨ Fairy Magic Activated!</div>
+
+  <!-- Persistent YouTube Iframe Holder -->
+  <div id="yt-hidden-player-box">
+    <div id="yt-audio-player"></div>
+  </div>
+
+  <!-- Floating Tap to Play Music Banner (Prominently displayed whenever mobile blocks autoplay) -->
+  <div id="mobile-play-prompt" aria-label="Tap to Play Music">
+    <button type="button" class="btn-tap-to-play" id="btn-tap-to-play" title="Tap to Play Music 🎵">
+      <span class="music-icon-spin">🎵</span>
+      <span>Tap to Play Music 💗</span>
+    </button>
+  </div>
+
+  <!-- Floating Music Controller Dock -->
+  <div id="music-player-bar" aria-label="Music Player Controls">
+    <div class="vinyl-disc" id="vinyl-disc" title="O Maahi — Arijit Singh">💗</div>
+    <div class="music-meta">
+      <span class="music-title">O Maahi</span>
+      <span class="music-subtitle">Arijit Singh • Dunki</span>
+    </div>
+    <div class="music-wave" aria-hidden="true">
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+      <div class="music-bar"></div>
+    </div>
+    <div class="music-controls-group">
+      <button class="music-btn" id="btn-music-toggle" title="Play Song ▶️" aria-label="Play or Pause Song">Play Song ▶️</button>
+      <button class="music-btn" id="btn-music-mute" title="Mute Sound 🔇" aria-label="Mute or Unmute Sound">Mute Sound 🔇</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main id="app-container">
+
+    <!-- ====================================================================
+         SCREEN 1 — MAGICAL WELCOME
+         ==================================================================== -->
+    <section class="screen active" id="screen-1" aria-label="Screen 1: Magical Welcome">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>🧚🏻‍♀️</span> Fairy_OS // Welcome.exe
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <div class="welcome-card-inner">
+            <div class="welcome-badge">✦ A Special Little Corner ✦</div>
+            
+            <div class="fairy-avatar-halo">
+              <div class="fairy-illustration-box">
+                <!-- Cute SVG Butterfly & Star -->
+                <svg class="fairy-wings-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M50 48C40 25 15 25 20 50C24 68 45 60 50 56C55 60 76 68 80 50C85 25 60 25 50 48Z" fill="#FF85A2" fill-opacity="0.8" stroke="#421838" stroke-width="2"/>
+                  <circle cx="50" cy="50" r="5" fill="#421838"/>
+                  <path d="M50 35L50 65" stroke="#421838" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="35" cy="42" r="3" fill="#FFF"/>
+                  <circle cx="65" cy="42" r="3" fill="#FFF"/>
+                  <path d="M47 34C44 26 40 24 37 25" stroke="#421838" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M53 34C56 26 60 24 63 25" stroke="#421838" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <h1 class="fairy-heading">My Little Fairy 🧚🏻‍♀️💗</h1>
+            <p class="fairy-subtitle">A Special Little Corner, Made with Love 💗</p>
+            <p class="welcome-desc">Aik chota sa khubsurat sa page , jo khaas aap ke liye bohat saaray pyaar aur mohobbat say banai hai.</p>
+
+            <div class="button-group">
+              <button class="btn-fairy" id="btn-enter-world" onclick="goToScreen(2, true)">
+                Click Here 💗
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 2 — MAGICAL REVEAL
+         ==================================================================== -->
+    <section class="screen" id="screen-2" aria-label="Screen 2: Pyaar Se Sajaya Aik beautiful Safar">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>✨</span> Portal_Of_Magic.exe
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(1)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <div class="reveal-box">
+            <div class="reveal-wand">✨⭐✨</div>
+            <h2 class="fairy-heading" style="font-size: 1.8rem;">Pyaar Se Sajaya Aik beautiful Safar💗</h2>
+            <p class="reveal-quote">
+              “Kuch log hamari zindagi mein khamoshi se aate hain, magar apni mojoodgi se har lamha khoobsurat bana dete hain. 🫀”
+            </p>
+            <p style="color: #643152; font-size: 0.98rem; line-height: 1.6; margin-bottom: 24px;">
+              Yeh chota sa page khushi, sukoon, mohobbat aur khoobsurat yaadon ke naam hai. Umeed hai ke yahan ka har word apkai face par muskurahat le aaye.
+            </p>
+            <div class="button-group">
+              <button class="btn-fairy btn-fairy-secondary" onclick="goToScreen(1)">
+                ← Back
+              </button>
+              <button class="btn-fairy" onclick="goToScreen(3)">
+                Continue 💗
+              </button>
+              <button class="btn-fairy" onclick="goToScreen(3)">
+                Explore My World 🌸
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 3 — MAIN DASHBOARD
+         ==================================================================== -->
+    <section class="screen" id="screen-3" aria-label="Screen 3: Main Dashboard">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>🌸</span> Fairy_Desktop_OS // Home.sys
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(1)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <!-- Top OS status bar -->
+          <div class="dashboard-topbar">
+            <div class="status-badge">
+              <span class="status-dot"></span>
+              <span>Fairy Realm: Online 🌟</span>
+            </div>
+            <div id="fairy-clock">🧚 Magic Time: --:--</div>
+            <div class="status-badge">
+              <span>Mood: 100% Sweet 💖</span>
+            </div>
+          </div>
+
+          <h2 class="fairy-heading" style="margin-bottom: 6px;">Meri Choti Si Duniya, Pyaar Se Saji Hui 💗</h2>
+          <p class="fairy-subtitle">Yahan aap ke liye kuch khaas baatein dil sai likhi hain.</p>
+
+          <div class="dashboard-grid">
+            <!-- Card 1: Our Story -->
+            <div class="dash-card" onclick="goToScreen(4)" role="button" tabindex="0">
+              <div class="dash-card-icon">📖</div>
+              <div class="dash-card-title">Our Story 📖</div>
+              <div class="dash-card-desc">Aik aisi Story jo khoobsurat yaadon, jazbaat aur Apnaipan say bhari hai.</div>
+              <span class="dash-card-tag">Read Story ✨</span>
+            </div>
+
+            <!-- Card 2: A Special Letter -->
+            <div class="dash-card" onclick="goToScreen(5)" role="button" tabindex="0">
+              <div class="dash-card-icon">💌</div>
+              <div class="dash-card-title">A Special Letter 💌</div>
+              <div class="dash-card-desc">Dil se likha hua aik khaas khat, jo pyaar aur apnapan ka ehsaas dilaye.</div>
+              <span class="dash-card-tag">Open Letter 💌</span>
+            </div>
+
+            <!-- Card 3: My little Promises -->
+            <div class="dash-card" onclick="goToScreen(6)" role="button" tabindex="0">
+              <div class="dash-card-icon">🤞🏻</div>
+              <div class="dash-card-title">My little Promises 🤞🏻</div>
+              <div class="dash-card-desc">Khayal rakhne, izzat dene aur khushiyan baantne ke waday.</div>
+              <span class="dash-card-tag">View Promises 🤞🏻</span>
+            </div>
+
+            <!-- Card 4: My little Wishes -->
+            <div class="dash-card" onclick="goToScreen(7)" role="button" tabindex="0">
+              <div class="dash-card-icon">🌷</div>
+              <div class="dash-card-title">My little Wishes 🌷</div>
+              <div class="dash-card-desc">Khushi, sukoon, kamyabi aur achi zindagi ke liye dil se nikli hui khwahishein.</div>
+              <span class="dash-card-tag">Make a Wish 🌷</span>
+            </div>
+
+            <!-- Card 5: Fairy Quiz -->
+            <div class="dash-card" onclick="goToScreen(8)" role="button" tabindex="0">
+              <div class="dash-card-icon">🧚🏻‍♀️</div>
+              <div class="dash-card-title">Fairy Quiz 🧚🏻‍♀️</div>
+              <div class="dash-card-desc">Kuch dilchasp sawal, jin ke jawab de kar visitor apne baare mein jaan sakega.</div>
+              <span class="dash-card-tag">Take Quiz 🧚🏻‍♀️</span>
+            </div>
+
+            <!-- Card 6: Secret Message -->
+            <div class="dash-card" onclick="goToScreen(9)" role="button" tabindex="0">
+              <div class="dash-card-icon">🔐</div>
+              <div class="dash-card-title">Secret Message 🔐</div>
+              <div class="dash-card-desc">Aik khaas paighaam jo kholne par saamne aayega.</div>
+              <span class="dash-card-tag">Unlock Secret 🔐</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 4 — OUR STORY
+         ==================================================================== -->
+    <section class="screen" id="screen-4" aria-label="Screen 4: Our Story">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>📖</span> Our_Story.doc
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(3)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2 class="fairy-heading">Our Story 📖</h2>
+          <p class="fairy-subtitle">“Aik aisi Story jo khoobsurat yaadon, jazbaat aur Apnaipan say bhari hai.”</p>
+
+          <div class="story-book-frame">
+            <div class="story-book-header">
+              <div class="story-date-badge" id="story-chapter-title">The Beginning of Us</div>
+              <span style="font-size: 1.2rem;">🌸 ⋆｡˚ ☁️</span>
+            </div>
+
+            <!-- Chapter Navigation Tabs -->
+            <div class="story-tab-nav">
+              <button class="story-tab-btn active" onclick="switchStoryChapter(0)">1. The Beginning of Us</button>
+              <button class="story-tab-btn" onclick="switchStoryChapter(1)">2. Little Moments, Beautiful Memories</button>
+              <button class="story-tab-btn" onclick="switchStoryChapter(2)">3. A Safe Place Called You</button>
+              <button class="story-tab-btn" onclick="switchStoryChapter(3)">4. You and Me, Forever</button>
+            </div>
+
+            <!-- Dynamic Story Content Box -->
+            <div class="story-content-box" id="story-text-container">
+              <!-- Content inserted via JavaScript -->
+            </div>
+
+            <div class="story-footer-nav">
+              <button class="btn-fairy btn-fairy-secondary btn-fairy-sm" id="btn-story-prev" onclick="prevStoryChapter()">
+                ← Previous
+              </button>
+              <span style="font-weight: 700; font-size: 0.85rem; color: #8c4e77;" id="story-page-indicator">1 / 4</span>
+              <button class="btn-fairy btn-fairy-sm" id="btn-story-next" onclick="nextStoryChapter()">
+                Next →
+              </button>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn-fairy btn-fairy-secondary" onclick="goToScreen(3)">
+              ← Back to Dashboard
+            </button>
+            <button class="btn-fairy" onclick="goToScreen(5)">
+              Read The Letter 💌 →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 5 — A SPECIAL LETTER
+         ==================================================================== -->
+    <section class="screen" id="screen-5" aria-label="Screen 5: A Special Letter">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>💌</span> Fairy_Mailbox // Letter.msg
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(3)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2 class="fairy-heading">Meri little Pari Ke Naam Aik Khat 💌</h2>
+          <p class="fairy-subtitle">Dil se likha hua aik khaas khat, jo pyaar aur apnapan ka ehsaas dilaye.</p>
+
+          <div class="envelope-stage">
+            <!-- Retro Envelope (Closed state) -->
+            <div class="retro-envelope-wrapper" id="retro-envelope" onclick="toggleLetter(true)">
+              <div class="envelope-top-flap" id="envelope-flap"></div>
+              <div class="envelope-seal" id="envelope-seal" title="Click Here to Open Your Letter 💌">💗</div>
+              <div style="color: #fff; font-weight: 700; font-size: 1.1rem; text-shadow: 1px 1px 0px var(--retro-plum); text-align: center; padding: 0 10px;">
+                For: Meri Little Pari 🧚🏻‍♀️
+              </div>
+            </div>
+            <p class="envelope-instruction" id="envelope-instruction-text">
+              ✨ Click Here to Open Your Letter 💌 ✨
+            </p>
+
+            <!-- Unfolded Letter (Shown on open) -->
+            <div class="letter-paper-view" id="letter-paper">
+              <div class="letter-header-stamp">
+                <span>🌸</span>
+                <span style="font-size: 0.6rem; font-weight: 700; color: #ff5470;">AIR MAIL</span>
+              </div>
+
+              <div class="letter-salutation">Meri Pyari Begum, 💗🌸</div>
+              <div class="letter-body">
+                <p>
+                  Aap mere liye sirf aik khaas shakhs nahi, balke meri ikloti mohabbat aur iklota ishq hain. Dil chahta hai ke aap hamesha khush rahein aur mein hamesha apko dekhta rahon. Dil karta hai ap apnai saray duk dard aur pareshanian mujh se share karin takay mein apkoo sanbhal lon. Yeh chota sa khat khaas aap ke liye hai, meri taraf se aik pyari si yaad. 💌
+                </p>
+                <div class="letter-closing-title">Khat ke Aakhir Mein:</div>
+                <div class="letter-dua">
+                  Allah Ta'ala aap ko hamesha apni hifazat mein rakhe, apko lambi umer dai , hamari mohobbat, ishq, piyar ko hamesha yunhi qaim rakhai aur hamarai is safar ko nikkah ki manzill tak pohnchai aur hamarai risthay me jitni bh rukawatain hain un sab ko apnai karam se door farmai our is rishatay ko khoobsoorat banai rakhai. Ameen summa Ameen!
+                </div>
+              </div>
+
+              <div class="letter-signature">
+                Aap ka Chota Sa Munna! 💗
+              </div>
+
+              <div style="display: flex; justify-content: center; margin-top: 24px; gap: 12px; flex-wrap: wrap;">
+                <button class="btn-fairy btn-fairy-secondary btn-fairy-sm" onclick="toggleLetter(false)">
+                  Re-fold Letter ✉️
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn-fairy btn-fairy-secondary" onclick="goToScreen(3)">
+              ← Back to Dashboard
+            </button>
+            <button class="btn-fairy" onclick="goToScreen(6)">
+              My little Promises 🤞🏻 →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 6 — MY LITTLE PROMISES
+         ==================================================================== -->
+    <section class="screen" id="screen-6" aria-label="Screen 6: My little Promises">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>🤞🏻</span> Heart_Promises.memo
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(3)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2 class="fairy-heading">Aap Ke Liye Mere Chotay Chotay Waday 💗</h2>
+          <p class="fairy-subtitle">Khayal rakhne, izzat dene aur khushiyan baantne ke waday. Tap each note to seal it!</p>
+
+          <div class="promises-grid">
+            <!-- Promise 1 -->
+            <div class="promise-card" onclick="togglePromiseSeal(this)">
+              <div class="promise-pin"></div>
+              <div class="promise-number">Wada #1 🤞🏻</div>
+              <div class="promise-text">Main hamesha aap ki baat tawajjo aur khayal se sunun ga.</div>
+              <div class="promise-seal"><span>Tap to Seal</span> 💗</div>
+            </div>
+
+            <!-- Promise 2 -->
+            <div class="promise-card" onclick="togglePromiseSeal(this)">
+              <div class="promise-pin"></div>
+              <div class="promise-number">Wada #2 🤞🏻</div>
+              <div class="promise-text">Main aap ke jazbaat ki izzat karun ga aur unhein narmi se samajhne ki koshish karunga.</div>
+              <div class="promise-seal"><span>Tap to Seal</span> 💗</div>
+            </div>
+
+            <!-- Promise 3 -->
+            <div class="promise-card" onclick="togglePromiseSeal(this)">
+              <div class="promise-pin"></div>
+              <div class="promise-number">Wada #3 🤞🏻</div>
+              <div class="promise-text">Main zindagi ke un chotay chotay lamhon ki qadar karun ga jo lamhai apko khush kartai hain.</div>
+              <div class="promise-seal"><span>Tap to Seal</span> 💗</div>
+            </div>
+
+            <!-- Promise 4 -->
+            <div class="promise-card" onclick="togglePromiseSeal(this)">
+              <div class="promise-pin"></div>
+              <div class="promise-number">Wada #4 🤞🏻</div>
+              <div class="promise-text">Main hamesha sachai, sabr aur aik doosray ko samajhne ko ahmiyat dunga.</div>
+              <div class="promise-seal"><span>Tap to Seal</span> 💗</div>
+            </div>
+
+            <!-- Promise 5 -->
+            <div class="promise-card" onclick="togglePromiseSeal(this)">
+              <div class="promise-pin"></div>
+              <div class="promise-number">Wada #5 🤞🏻</div>
+              <div class="promise-text">Main hamesha apko stress free rakne ki koshish karun ga aur apko kabhi bhi akela feel nhi hony dunga.</div>
+              <div class="promise-seal"><span>Tap to Seal</span> 💗</div>
+            </div>
+
+            <!-- Promise 6 -->
+            <div class="promise-card" onclick="togglePromiseSeal(this)">
+              <div class="promise-pin"></div>
+              <div class="promise-number">Wada #6 🤞🏻</div>
+              <div class="promise-text">Main aap ki khushiyon aur kamyabiyon mein shamil rahunga aur aap ke khamosh aur udaas lamhon mein bhi aap ke liye jagah rakhunga.</div>
+              <div class="promise-seal"><span>Tap to Seal</span> 💗</div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn-fairy btn-fairy-secondary" onclick="goToScreen(3)">
+              ← Back to Dashboard
+            </button>
+            <button class="btn-fairy" onclick="goToScreen(7)">
+              My little Wishes 🌷 →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 7 — MY LITTLE WISHES
+         ==================================================================== -->
+    <section class="screen" id="screen-7" aria-label="Screen 7: My little Wishes">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>🌷</span> Wishing_Well.exe
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(3)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2 class="fairy-heading">Meri Choti Si Khwahishein 💗</h2>
+          <p class="fairy-subtitle">
+            Kuch khoobsurat khwahishein,sirf aap ke liye.
+          </p>
+
+          <div class="wish-orb-container">
+            <div class="wish-star-icon">🌟</div>
+            
+            <div class="wish-display-card" id="wish-display-text">
+              ✨ Tap the magic button below to draw your enchanted wish! ✨
+            </div>
+
+            <div style="margin-top: 14px; margin-bottom: 20px;">
+              <span class="wishes-counter-tag">
+                <span>Wishes Unlocked:</span>
+                <strong id="wishes-counter-number">0</strong> 💫
+              </span>
+            </div>
+
+            <button class="btn-fairy" id="btn-draw-wish" onclick="drawMagicalWish()">
+              Make a Little Wish ✨
+            </button>
+          </div>
+
+          <div class="button-group">
+            <button class="btn-fairy btn-fairy-secondary" onclick="goToScreen(3)">
+              ← Back to Dashboard
+            </button>
+            <button class="btn-fairy" onclick="goToScreen(8)">
+              Fairy Quiz 🧚🏻‍♀️ →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 8 — FAIRY QUIZ
+         ==================================================================== -->
+    <section class="screen" id="screen-8" aria-label="Screen 8: Fairy Quiz">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>🧚🏻‍♀️</span> Fairy_Personality_Test.app
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(3)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2 class="fairy-heading">Kuch Sawal Aapke Lia 💗</h2>
+          <p class="fairy-subtitle">yeh kuch questions hain in ke jawab dein.</p>
+
+          <form class="quiz-form" id="fairy-quiz-form" onsubmit="return false;">
+            <!-- Question 1 -->
+            <div class="quiz-group">
+              <label class="quiz-label" for="q1">
+                <span>🌸</span> 1. Aisi kaunsi cheez hai jo aap ke aik aam din ko bhi khoobsurat bana sakti hai?
+              </label>
+              <input type="text" id="q1" class="quiz-input" placeholder="Yahan apna jawab likhein...">
+            </div>
+
+            <!-- Question 2 -->
+            <div class="quiz-group">
+              <label class="quiz-label" for="q2">
+                <span>🍃</span> 2. Aap ki khushi ka sab se main reason kya hai?
+              </label>
+              <input type="text" id="q2" class="quiz-input" placeholder="Apne khayal likhein...">
+            </div>
+
+            <!-- Question 3 -->
+            <div class="quiz-group">
+              <label class="quiz-label" for="q3">
+                <span>✨</span> 3. Aise teen alfaaz likhein jin say aap apni mohobbat ko bayan karte hon.
+              </label>
+              <input type="text" id="q3" class="quiz-input" placeholder="Pehla, doosra aur teesra lafz...">
+            </div>
+
+            <!-- Question 4 -->
+            <div class="quiz-group">
+              <label class="quiz-label" for="q4">
+                <span>💗</span> 4. Aisi kaunsi choti si cheez hai jo hamesha aap ke chehre par muskurahat le aati hai?
+              </label>
+              <textarea id="q4" class="quiz-textarea" placeholder="Apni pasandeeda cheez likhein..."></textarea>
+            </div>
+
+            <div class="button-group">
+              <button type="button" class="btn-fairy" id="btn-submit-quiz">
+                Take a Screenshot 📸
+              </button>
+              <button type="button" class="btn-fairy btn-fairy-secondary" onclick="resetQuiz()">
+                Reset Quiz ↺
+              </button>
+            </div>
+          </form>
+
+          <div class="button-group" style="margin-top: 24px;">
+            <button class="btn-fairy btn-fairy-secondary" onclick="goToScreen(3)">
+              ← Back to Dashboard
+            </button>
+            <button class="btn-fairy" onclick="goToScreen(9)">
+              Secret Message 🔐 →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 9 — SECRET WORLD
+         ==================================================================== -->
+    <section class="screen" id="screen-9" aria-label="Screen 9: Secret Message">
+      <div class="retro-window">
+        <div class="window-titlebar">
+          <div class="window-title">
+            <span>🔐</span> Secret_Treasures // Vault.key
+          </div>
+          <div class="window-controls">
+            <span class="win-btn">_</span>
+            <span class="win-btn">□</span>
+            <span class="win-btn btn-close" onclick="goToScreen(3)">✕</span>
+          </div>
+        </div>
+        <div class="window-content">
+          <h2 class="fairy-heading">Aik Chota Sa Raaz 💗</h2>
+          <p class="fairy-subtitle">Aik khaas paighaam jo kholne par saamne aayega.</p>
+
+          <div class="secret-box-container">
+            <div class="gift-box-icon" id="gift-icon" onclick="unlockSecretSurprise()" title="Tap to unlock!">
+              🎁
+            </div>
+            
+            <div id="secret-lock-prompt">
+              <p style="font-weight: 700; color: #643152; margin-bottom: 16px; font-size: 1.05rem;">
+                Aap ke liye aik khaas paighaam chhupa hua hai. Kya aap usay kholna chahein gi?
+              </p>
+              <button class="btn-fairy" id="btn-unlock-secret" onclick="unlockSecretSurprise()">
+                Open Message 🔓
+              </button>
+            </div>
+
+            <!-- Revealed Secret Message -->
+            <div class="secret-reveal-content" id="secret-reveal-box">
+              <div style="font-size: 2.2rem; margin-bottom: 12px;">🧚🏻‍♀️💫💖</div>
+              <p class="secret-quote">
+                “Aap mere liyai wo shakhsiyat hain jo aik chotay se lamhay ko bhi khoobsurat yaad mein badal sakti hain. Umeed hai ke meri yai choti si duniya aap ke chehre par muskurahat le aaye aur aap ko yaad dilaye ke aap narmi, khushi aur zindagi ki tamam khoobsurat cheezon ki haqdar hain.”
+              </p>
+              <p style="color: #643152; font-size: 1rem; line-height: 1.7; margin-top: 16px;">
+                Shukriya ke aap mere is chotai say dil mein aayin.
+              </p>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button class="btn-fairy btn-fairy-secondary" onclick="goToScreen(3)">
+              Back to My World
+            </button>
+            <button class="btn-fairy" onclick="restartExperience()">
+              Start the Magic Again ↻
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC
+       ========================================================================== -->
+  <!-- Official YouTube Iframe API Script -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <script>
+    /* ==========================================================================
+       A. GLOBAL STATE & NAVIGATION
+       ========================================================================== */
+    let currentScreen = 1;
+    let wishesUnlockedCount = 0;
+    let envelopeIsOpen = false;
+    let secretIsUnlocked = false;
+
+    // Predefined Uplifting Wishes (Local array from latest Cont.txt)
+    const MAGICAL_WISHES = [
+      "Meri Khwahish Hai Ke Allah kare aap ki zindagi ka har raasta choti choti khushiyon aur kamyabiyon se bhara ho.",
+      "Meri Khwahish Hai Ke Allah kare aap ko itni khush rakkhai kai pareshanian apkai qareeb bh na ain.",
+      "Meri Khwahish Hai Ke Allah kare har raat aap ko pur-sukoon neend aur khoobsurat khwab naseeb hon.",
+      "Meri Khwahish Hai Ke Allah kare aap ke dil ke har shak aur pareshani ki jagah yaqeen aur sukoon le le.",
+      "Meri Khwahish Hai Ke Allah kare aap mujhe jitni mohobbat kartin hain aur sukoon deti hain is se khi zyda sukoon aur khushian apko milain.",
+      "Meri Khwahish Hai Ke Allah kare zindagi ke har mor par aap ko khushiyan milti rahain.",
+      "Meri Khwahish Hai Ke Allah kare aap ke din aap ke khoobsurat khayalon ki tarah roshan aur dilkash hon.",
+      "Meri Khwahish Hai Ke Allah kare duniya kitni bhi masroof kyun na ho, sukoon hamesha aap ke dil mein rahe.",
+      "Meri Khwahish Hai Ke Allah kare app khud ko qeemti or khas mehsoos karo,ap ko lagai ke aap ki mojoodgi bohat khaas hai."
+    ];
+
+    // Story Chapters Data (All 4 chapters and final message from Cont.txt)
+    const STORY_CHAPTERS = [
+      {
+        title: "1. The Beginning of Us",
+        text: "<p>Har khoobsurat safar aik choti si shuruaat se janam leti hai. Kabhi kabhi kuch log zindagi mein subah ki halki dhoop ki tarah aate hain aur apni narmi, sachai aur achay andaaz se har cheez ko khoobsurat bana dete hain. Blkl issi tarha ap mere zindagi mein ain or meri zindagi khubsurat bana di.</p>"
+      },
+      {
+        title: "2. Little Moments, Beautiful Memories",
+        text: "<p>Kabhi kabhi choti choti baatein hi dil mein sab se khaas jagah bana leti hain. Aapki pyari si muskurahat, aapki baatein aur aapka saath mere liye bohat qeemti hai. Aapke saath guzara hua har chota sa lamha meri zindagi ki aik khoobsurat yaad ban jata hai.</p>"
+      },
+      {
+        title: "3. A Safe Place Called You",
+        text: "<p>Duniya chahe kitni bhi mushkil kyun na ho aapke paas aakar dil ko sukoon milta hai. Aapki baahain apka piyar and apka care karna mere liye sab se mehfooz ehsaas hai.Aap meri woh panah hain jahan main bina kisi darr ke apna dil rakh sakta hoon.Meri begum, aapke saath hi mujhe apna ghar aur apni poori duniya mehsoos hoti hai.</p>"
+      },
+      {
+        title: "4. You and Me, Forever",
+        text: "<p>Meri khwahish hai ke zindagi ka har aane wala kal aapke saath guzray. Har khushi mein aap mere saath hon aur har mushkil mein hum aik doosray ka sahara banain.Waqt badalta rahay, magar humari mohabbat aur aik doosray ka saath kabhi kam na ho.Meri dua hai ke humara aaj bhi aik doosray ke naam ho aur humara har aanay wala kal bhi.</p><div class=\"story-final-message\"><strong>Aakhri Paighaam:</strong><p>Shukriya ke aap is bari si duniya mein meri world ki sab say bestest Little Fairy hain. 💗</p></div>"
+      }
+    ];
+    let currentStoryChapter = 0;
+
+    // Screen Switching Function
+    function goToScreen(screenNumber, startMusicTrigger = false) {
+      if (screenNumber < 1 || screenNumber > 9) return;
+      
+      const prevScreenEl = document.getElementById(`screen-${currentScreen}`);
+      const nextScreenEl = document.getElementById(`screen-${screenNumber}`);
+
+      if (prevScreenEl) {
+        prevScreenEl.classList.remove('active');
+      }
+
+      if (nextScreenEl) {
+        nextScreenEl.classList.add('active');
+        currentScreen = screenNumber;
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Notifications tied to user navigation
+      if (startMusicTrigger) {
+        ensureMusicPlaying();
+        triggerMagicalChime();
+        showToast("Your loving world is ready!");
+      } else if (screenNumber === 3) {
+        showToast("You are truly special for me!");
+      } else if (screenNumber === 5) {
+        showToast("Your letter is waiting for you!");
+      }
+    }
+
+    function restartExperience() {
+      // Reset quiz
+      resetQuiz();
+      
+      // Reset wishes
+      wishesUnlockedCount = 0;
+      const countEl = document.getElementById('wishes-counter-number');
+      if (countEl) countEl.innerText = "0";
+      const wishTextEl = document.getElementById('wish-display-text');
+      if (wishTextEl) wishTextEl.innerText = "✨ Tap the magic button below to draw your enchanted wish! ✨";
+
+      // Reset secret
+      secretIsUnlocked = false;
+      const secretBox = document.getElementById('secret-reveal-box');
+      const secretPrompt = document.getElementById('secret-lock-prompt');
+      const giftIcon = document.getElementById('gift-icon');
+      if (secretBox) secretBox.style.display = 'none';
+      if (secretPrompt) secretPrompt.style.display = 'block';
+      if (giftIcon) giftIcon.innerText = '🎁';
+
+      // Reset envelope
+      toggleLetter(false);
+
+      // Return to screen 1
+      goToScreen(1);
+      showToast("Welcome back, Little Fairy!");
+    }
+
+    /* ==========================================================================
+       B. BACKGROUND MUSIC (O MAAHI — YOUTUBE EMBEDDED PLAYER)
+       ========================================================================== */
+    let ytPlayer = null;
+    let isMusicPlaying = false;
+    let isMusicMuted = false;
+    let playerIsReady = false;
+    let hasAttemptedUserPlay = false;
+
+    // Called automatically by YouTube Iframe API when loaded
+    window.onYouTubeIframeAPIReady = function() {
+      if (ytPlayer) return; // Prevent duplicate instantiation
+
+      const isHttp = window.location.protocol.startsWith('http');
+      const originUrl = isHttp ? window.location.origin : 'https://www.youtube.com';
+
+      try {
+        ytPlayer = new YT.Player('yt-audio-player', {
+          height: '200',
+          width: '200',
+          videoId: 'Etkd-07gnxM', // O Maahi — Arijit Singh (Dunki) Official Video
+          playerVars: {
+            enablejsapi: 1,
+            autoplay: 0, // Respect mobile browser policies: wait for user interaction
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            loop: 1,
+            playlist: 'Etkd-07gnxM',
+            modestbranding: 1,
+            playsinline: 1,
+            rel: 0,
+            origin: originUrl,
+            widget_referrer: isHttp ? window.location.href : 'https://www.youtube.com'
+          },
+          events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange,
+            onError: onPlayerError
+          }
+        });
+      } catch (e) {
+        console.warn("YouTube API init fallback:", e);
+      }
+    };
+
+    function onPlayerReady(event) {
+      playerIsReady = true;
+
+      // On desktop, attempt autoplay; on mobile Chrome/Safari, this will gracefully be held
+      try {
+        event.target.playVideo();
+      } catch (err) {
+        // Autoplay restriction caught
+      }
+
+      // If autoplay was blocked by mobile browser, display the clear "Tap to Play Music 🎵" button
+      setTimeout(() => {
+        if (!isMusicPlaying && !hasAttemptedUserPlay) {
+          showTapToPlayPrompt();
+        }
+      }, 1200);
+    }
+
+    function onPlayerStateChange(event) {
+      // YT.PlayerState.PLAYING = 1, PAUSED = 2, BUFFERING = 3, ENDED = 0
+      const vinylDisc = document.getElementById('vinyl-disc');
+      const toggleBtn = document.getElementById('btn-music-toggle');
+
+      if (event.data === YT.PlayerState.PLAYING) {
+        isMusicPlaying = true;
+        hideTapToPlayPrompt();
+        if (vinylDisc) vinylDisc.classList.add('playing');
+        if (toggleBtn) {
+          toggleBtn.innerHTML = "Pause Song ⏸️";
+          toggleBtn.title = "Pause Song ⏸️";
+        }
+      } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+        isMusicPlaying = false;
+        if (vinylDisc) vinylDisc.classList.remove('playing');
+        if (toggleBtn) {
+          toggleBtn.innerHTML = "Play Song ▶️";
+          toggleBtn.title = "Play Song ▶️";
+        }
+      }
+    }
+
+    function onPlayerError(event) {
+      console.warn("YouTube player notification:", event.data);
+      if (window.location.protocol === 'file:') {
+        showToast("YouTube error: Mobile par song chalane ke liye website ko kisi web link ya local server se open karein 🎵");
+      } else {
+        showTapToPlayPrompt();
+      }
+    }
+
+    function showTapToPlayPrompt() {
+      const prompt = document.getElementById('mobile-play-prompt');
+      if (prompt && !isMusicPlaying) {
+        prompt.style.display = 'flex';
+        setTimeout(() => {
+          if (prompt && !isMusicPlaying) prompt.style.opacity = '1';
+        }, 50);
+      }
+    }
+
+    function hideTapToPlayPrompt() {
+      const prompt = document.getElementById('mobile-play-prompt');
+      if (prompt) {
+        prompt.style.opacity = '0';
+        setTimeout(() => {
+          if (isMusicPlaying) prompt.style.display = 'none';
+        }, 400);
+      }
+    }
+
+    // Direct user-gesture handler for 100% reliable mobile playback
+    function startMusicFromUserGesture() {
+      hasAttemptedUserPlay = true;
+
+      if (!ytPlayer || !playerIsReady || typeof ytPlayer.playVideo !== 'function') {
+        if (window.location.protocol === 'file:') {
+          showToast("Mobile par song sunne ke liye website ko link (server) ke zariye open karein 🎵");
+        } else {
+          showToast("Music player loading... aik lamha intezar karein ✨");
+        }
+        return;
+      }
+
+      try {
+        if (typeof ytPlayer.isMuted === 'function' && ytPlayer.isMuted()) {
+          ytPlayer.unMute();
+          updateMuteButtonUI(false);
+        }
+        ytPlayer.playVideo();
+        hideTapToPlayPrompt();
+      } catch (err) {
+        console.warn("Error starting playback:", err);
+      }
+    }
+
+    function ensureMusicPlaying() {
+      startMusicFromUserGesture();
+    }
+
+    function toggleMusicPlayback() {
+      if (!ytPlayer || !playerIsReady || typeof ytPlayer.getPlayerState !== 'function') {
+        startMusicFromUserGesture();
+        return;
+      }
+
+      const state = ytPlayer.getPlayerState();
+      if (state === YT.PlayerState.PLAYING) {
+        ytPlayer.pauseVideo();
+      } else {
+        startMusicFromUserGesture();
+      }
+    }
+
+    function toggleMusicMute() {
+      if (!ytPlayer || !playerIsReady) return;
+
+      if (typeof ytPlayer.isMuted === 'function') {
+        if (ytPlayer.isMuted()) {
+          ytPlayer.unMute();
+          updateMuteButtonUI(false);
+        } else {
+          ytPlayer.mute();
+          updateMuteButtonUI(true);
+        }
+      }
+    }
+
+    function updateMuteButtonUI(muted) {
+      isMusicMuted = muted;
+      const muteBtn = document.getElementById('btn-music-mute');
+      if (muteBtn) {
+        muteBtn.innerHTML = muted ? "Unmute Sound 🔊" : "Mute Sound 🔇";
+        muteBtn.title = muted ? "Unmute Sound 🔊" : "Mute Sound 🔇";
+      }
+    }
+
+    // Attach listeners to both click and touchend for instant mobile responsiveness
+    const tapPromptBtn = document.getElementById('btn-tap-to-play');
+    if (tapPromptBtn) {
+      tapPromptBtn.addEventListener('click', startMusicFromUserGesture);
+      tapPromptBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        startMusicFromUserGesture();
+      });
+    }
+
+    const musicToggleBtn = document.getElementById('btn-music-toggle');
+    if (musicToggleBtn) {
+      musicToggleBtn.addEventListener('click', toggleMusicPlayback);
+      musicToggleBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        toggleMusicPlayback();
+      });
+    }
+
+    const musicMuteBtn = document.getElementById('btn-music-mute');
+    if (musicMuteBtn) {
+      musicMuteBtn.addEventListener('click', toggleMusicMute);
+      musicMuteBtn.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        toggleMusicMute();
+      });
+    }
+
+    /* ==========================================================================
+       C. SCREEN 4: STORY BOOK LOGIC
+       ========================================================================== */
+    function renderStoryChapter(index) {
+      if (index < 0 || index >= STORY_CHAPTERS.length) return;
+      currentStoryChapter = index;
+
+      const titleEl = document.getElementById('story-chapter-title');
+      const textContainer = document.getElementById('story-text-container');
+      const indicator = document.getElementById('story-page-indicator');
+      const tabs = document.querySelectorAll('.story-tab-btn');
+
+      if (titleEl) titleEl.innerText = STORY_CHAPTERS[index].title;
+      if (textContainer) {
+        textContainer.style.opacity = '0';
+        setTimeout(() => {
+          textContainer.innerHTML = STORY_CHAPTERS[index].text;
+          textContainer.style.opacity = '1';
+        }, 150);
+      }
+      if (indicator) indicator.innerText = `${index + 1} / ${STORY_CHAPTERS.length}`;
+
+      tabs.forEach((tab, idx) => {
+        if (idx === index) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+    }
+
+    function switchStoryChapter(index) {
+      triggerMagicalChime();
+      renderStoryChapter(index);
+    }
+
+    function nextStoryChapter() {
+      if (currentStoryChapter < STORY_CHAPTERS.length - 1) {
+        triggerMagicalChime();
+        renderStoryChapter(currentStoryChapter + 1);
+      } else {
+        goToScreen(5);
+      }
+    }
+
+    function prevStoryChapter() {
+      if (currentStoryChapter > 0) {
+        triggerMagicalChime();
+        renderStoryChapter(currentStoryChapter - 1);
+      }
+    }
+
+    /* ==========================================================================
+       D. SCREEN 5: ENVELOPE & LETTER LOGIC
+       ========================================================================== */
+    function toggleLetter(open) {
+      const envelopeWrapper = document.getElementById('retro-envelope');
+      const flap = document.getElementById('envelope-flap');
+      const paperView = document.getElementById('letter-paper');
+      const instruction = document.getElementById('envelope-instruction-text');
+
+      if (open) {
+        envelopeIsOpen = true;
+        triggerMagicalChime();
+        if (flap) flap.style.transform = "rotateX(180deg)";
+        setTimeout(() => {
+          if (envelopeWrapper) envelopeWrapper.style.display = 'none';
+          if (instruction) instruction.style.display = 'none';
+          if (paperView) paperView.style.display = 'block';
+          showToast("Your letter is waiting for you!");
+        }, 350);
+      } else {
+        envelopeIsOpen = false;
+        triggerMagicalChime();
+        if (paperView) paperView.style.display = 'none';
+        if (envelopeWrapper) envelopeWrapper.style.display = 'flex';
+        if (instruction) instruction.style.display = 'block';
+        if (flap) flap.style.transform = "rotateX(0deg)";
+      }
+    }
+
+    /* ==========================================================================
+       E. SCREEN 6: SWEET PROMISES LOGIC
+       ========================================================================== */
+    function togglePromiseSeal(cardEl) {
+      triggerSparkleSound();
+      cardEl.classList.toggle('sealed');
+      const sealText = cardEl.querySelector('.promise-seal');
+      if (cardEl.classList.contains('sealed')) {
+        sealText.innerHTML = "<span>Sealed Forever</span> 💖";
+        showToast("A little love, just for you!");
+      } else {
+        sealText.innerHTML = "<span>Tap to Seal</span> 💗";
+      }
+    }
+
+    /* ==========================================================================
+       F. SCREEN 7: MAGICAL WISHES LOGIC
+       ========================================================================== */
+    function drawMagicalWish() {
+      triggerMagicalChime();
+      const randomIndex = Math.floor(Math.random() * MAGICAL_WISHES.length);
+      const chosenWish = MAGICAL_WISHES[randomIndex];
+
+      const wishDisplay = document.getElementById('wish-display-text');
+      const countEl = document.getElementById('wishes-counter-number');
+
+      if (wishDisplay) {
+        wishDisplay.style.opacity = '0';
+        wishDisplay.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          wishDisplay.innerText = chosenWish;
+          wishDisplay.style.opacity = '1';
+          wishDisplay.style.transform = 'scale(1)';
+        }, 200);
+      }
+
+      wishesUnlockedCount++;
+      if (countEl) countEl.innerText = wishesUnlockedCount;
+      showToast("Your wishes are on their way!");
+    }
+
+    /* ==========================================================================
+       G. SCREEN 8: FAIRY QUIZ LOGIC (RESULT BUTTON DISABLED)
+       ========================================================================== */
+    // The Fairy Quiz result button "Take a Screenshot 📸" is strictly non-functional
+    const screenshotBtn = document.getElementById('btn-submit-quiz');
+    if (screenshotBtn) {
+      screenshotBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Absolutely no action: no popup, no modal, no toast, no screenshot, no download
+        return false;
+      });
+    }
+
+    function resetQuiz() {
+      const form = document.getElementById('fairy-quiz-form');
+      if (form) form.reset();
+    }
+
+    /* ==========================================================================
+       H. SCREEN 9: SECRET WORLD LOGIC
+       ========================================================================== */
+    function unlockSecretSurprise() {
+      if (secretIsUnlocked) return;
+      secretIsUnlocked = true;
+      triggerMagicalChime();
+
+      const giftIcon = document.getElementById('gift-icon');
+      const promptBox = document.getElementById('secret-lock-prompt');
+      const revealBox = document.getElementById('secret-reveal-box');
+
+      if (giftIcon) {
+        giftIcon.innerText = "💖";
+        giftIcon.style.animation = "pulseGlow 1.5s infinite alternate ease-in-out";
+      }
+      if (promptBox) promptBox.style.display = 'none';
+      if (revealBox) {
+        revealBox.style.display = 'block';
+      }
+
+      showToast("Secret unlocked!");
+    }
+
+    /* ==========================================================================
+       I. RETRO CLOCK & TOAST UTILITIES
+       ========================================================================== */
+    function updateFairyClock() {
+      const clockEl = document.getElementById('fairy-clock');
+      if (!clockEl) return;
+      const now = new Date();
+      let hours = now.getHours();
+      let minutes = now.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 0 should be 12
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      clockEl.innerText = `🧚 Fairy Time: ${hours}:${minutes} ${ampm}`;
+    }
+    setInterval(updateFairyClock, 1000);
+    updateFairyClock();
+
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = document.getElementById('fairy-toast');
+      if (!toast) return;
+      toast.innerText = message;
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    /* ==========================================================================
+       J. WEB AUDIO API SYNTHESIZER (No external audio files needed!)
+       ========================================================================== */
+    let audioCtx = null;
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function triggerMagicalChime() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        
+        const now = ctx.currentTime;
+        const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6 (Celeste chime)
+
+        freqs.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+
+          gain.gain.setValueAtTime(0.12, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 0.8);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.8);
+        });
+      } catch (e) {
+        // Safe silent fallback
+      }
+    }
+
+    function triggerSparkleSound() {
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.exponentialRampToValueAtTime(1760, now + 0.2);
+
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } catch (e) {
+        // Safe silent fallback
+      }
+    }
+
+    /* ==========================================================================
+       K. FAIRY DUST PARTICLES CANVAS
+       ========================================================================== */
+    (function initFairyParticles() {
+      const canvas = document.getElementById('fairy-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const particleCount = 40;
+      const particles = [];
+      const symbols = ['✦', '★', '🌸', '💖', '•', '✨'];
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 12 + 8,
+          speedY: Math.random() * 0.6 + 0.2,
+          speedX: (Math.random() - 0.5) * 0.4,
+          opacity: Math.random() * 0.6 + 0.2,
+          char: symbols[Math.floor(Math.random() * symbols.length)],
+          color: Math.random() > 0.5 ? '#ff85a2' : '#ffd269'
+        });
+      }
+
+      function renderParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          ctx.globalAlpha = p.opacity;
+          ctx.fillStyle = p.color;
+          ctx.font = `${p.size}px 'Quicksand', sans-serif`;
+          ctx.fillText(p.char, p.x, p.y);
+
+          p.y -= p.speedY;
+          p.x += p.speedX;
+
+          if (p.y < -20) {
+            p.y = height + 20;
+            p.x = Math.random() * width;
+          }
+          if (p.x < -20) p.x = width + 20;
+          if (p.x > width + 20) p.x = -20;
+        });
+
+        requestAnimationFrame(renderParticles);
+      }
+      renderParticles();
+    })();
+
+    // Initialize initial story chapter
+    renderStoryChapter(0);
+  </script>
+</body>
+</html>
